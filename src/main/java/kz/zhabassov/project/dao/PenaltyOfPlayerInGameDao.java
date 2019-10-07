@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
-public class PenaltyDao implements Dao, InitializingBean {
+public class PenaltyOfPlayerInGameDao implements Dao, InitializingBean {
     private JdbcTemplate jdbcTemplate;
 
     @Override
@@ -43,7 +43,7 @@ public class PenaltyDao implements Dao, InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         if (jdbcTemplate == null){
-            throw new BeanCreationException("Must set jdbcTemplate on PenaltyDao");
+            throw new BeanCreationException("Must set jdbcTemplate on PenaltyOfPlayerINGameDao");
         }
     }
 

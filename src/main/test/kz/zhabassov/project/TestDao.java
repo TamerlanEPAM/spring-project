@@ -1,10 +1,9 @@
 package kz.zhabassov.project;
 
+import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.context.support.GenericXmlApplicationContext;
 
-import javax.sql.ConnectionEvent;
 import javax.sql.DataSource;
 
 import java.sql.Connection;
@@ -15,8 +14,8 @@ import java.sql.SQLException;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class Test {
-    @org.junit.Test
+public class TestDao {
+    @Test
     public void TestOne() throws SQLException {
         ApplicationContext ctx = new ClassPathXmlApplicationContext("spring.xml");
 

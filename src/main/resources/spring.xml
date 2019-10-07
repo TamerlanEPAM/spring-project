@@ -6,16 +6,11 @@
  		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd   http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
 
 
-    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate" depends-on="dataSource">
         <constructor-arg ref="dataSource"/>
     </bean>
-    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="${db.driverClassName}"/>
-        <property name="url" value="${db.url}"/>
-        <property name="username" value="${db.username}"/>
-        <property name="password" value="${db.password}"/>
-    </bean>
-    <context:property-placeholder location="config.properties"/>
+
+
     <bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">
         <constructor-arg>
             <bean class="org.flywaydb.core.api.configuration.ClassicConfiguration">
@@ -26,5 +21,37 @@
         </constructor-arg>
     </bean>
 
+    <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+        <property name="poolName" value="springHikariCP" />
+<!--        <property name="dataSourceClassName" value="org.postgresql.ds.PGSimpleDataSource" />-->
+
+        <property name="dataSourceProperties">
+            <props>
+                <prop key="databaseName">${db.driverClassName}</prop>
+                <prop key="serverName">${db.url}</prop>
+                <prop key="user">${db.username}</prop>
+                <prop key="password">${db.password}</prop>
+            </props>
+        </property>
+    </bean>
+    <context:property-placeholder location="config.properties"/>
+    <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+        <constructor-arg ref="hikariConfig" />
+    </bean>
+    <bean id="gameDao" class="kz.zhabassov.project.dao.GameDao">
+        <property name="jdbcTemplate" ref="jdbcTemplate"/>
+    </bean>
+    <bean id="penaltyDao" class="kz.zhabassov.project.dao.PenaltyDao">
+        <property name="jdbcTemplate" ref="jdbcTemplate"/>
+    </bean>
+    <bean id="penaltyOfPlayerInGame" class="kz.zhabassov.project.dao.PenaltyOfPlayerInGameDao">
+        <property name="jdbcTemplate" ref="jdbcTemplate"/>
+    </bean>
+    <bean id="playerDao" class="kz.zhabassov.project.dao.PlayerDao">
+        <property name="jdbcTemplate" ref="jdbcTemplate"/>
+    </bean>
+    <bean id="teamDao" class="kz.zhabassov.project.dao.TeamDao">
+        <property name="jdbcTemplate" ref="jdbcTemplate"/>
+    </bean>
 
 </beans>
